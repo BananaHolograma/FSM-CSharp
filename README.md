@@ -61,32 +61,17 @@ You can download this plugin from the official [Godot asset library](https://god
 ##  Manual 
 To manually install the plugin, create an **"addons"** folder at the root of your Godot project and then download the contents from the **"addons"** folder of this repository.
 
-## CSharp custom resource registry
-In order to make available in the Godot editor the custom classes you've created, that unlike gdscript, in C# you need to install this addon [Godot-Mono-CustomResourceRegistry](https://github.com/Atlinx/Godot-Mono-CustomResourceRegistry) in your project.
+## CSharp GlobalClasses
+In order to make available in the Godot editor the custom classes you've created, that unlike gdscript, in C# you need use Global classes.
 
-So for example if you create a `Idle` state that inherits from `GodotParadiseState` in this way, you cannot add this as child in the scene tree via editor until you install the mentioned addon:
+So for example if you create a `Idle` state that inherits from `GodotParadiseState` in this way, you cannot add this as child in the scene tree via editor until you use the decorator:
 ```csharp
 using Godot;
 using System;
 
+[GlobalClass, Icon("res://addons/finite_state_machine/state_icon.png")]
 public partial class Idle : GodotParadiseState
 {
-
-    public override void Enter()
-    {
-       GD.Print("Idle start");
-    }
-}
-
-// Instead this syntax where icon parameter is optional, you can leave it empty
-using Godot;
-using System;
-using MonoCustomResourceRegistry;
-
-[RegisteredType(nameof(Idle), "res://custom_icon.png", nameof(GodotParadiseState))]
-public partial class Idle : GodotParadiseState
-{
-
     public override void Enter()
     {
        GD.Print("Idle start");
