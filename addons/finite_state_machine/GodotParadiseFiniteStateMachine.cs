@@ -12,9 +12,49 @@
 */
 
 using Godot;
+using Godot.Collections;
+using System;
 using System.Collections.Generic;
 
 public partial class GodotParadiseFiniteStateMachine : Node
 {
+    [Signal]
+    public delegate void StateChangedEventHandler(GodotParadiseState fromState, GodotParadiseState state);
+    [Signal]
+    public delegate void StackPushedEventHandler(GodotParadiseState newState, Array<GodotParadiseState> stack);
+    [Signal]
+    public delegate void StackFlushedEventHandler(Array<GodotParadiseState> stack);
 
+    [Export]
+    public GodotParadiseState CurrentState;
+    [Export]
+    public int StackCapacity = 3;
+    [Export]
+    public bool FlushStackWhenReachCapacity = false;
+    [Export]
+    public bool EnableStack = false;
+
+    public Dictionary States = new();
+    public Array<GodotParadiseState> StatesStack = new();
+    public bool Locked = false;
+
+
+
+    public void LockStateMachine()
+    {
+        SetProcess(false);
+        SetPhysicsProcess(false);
+        SetProcessInput(false);
+        SetProcessUnhandledInput(false);
+        EnableStack = false;
+    }
+
+    public void UnlockStateMachine()
+    {
+        SetProcess(true);
+        SetPhysicsProcess(true);
+        SetProcessInput(true);
+        SetProcessUnhandledInput(true);
+        EnableStack = true;
+    }
 }
