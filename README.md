@@ -12,39 +12,72 @@
 
 [![es](https://img.shields.io/badge/lang-es-yellow.svg)](https://github.com/GodotParadise/FSM-Csharp/blob/main/locale/README.es-ES.md)
 
-- - -
-
-A finite state machine designed to cover 95% of use cases, providing essential functionality and a basic state node that can be extended.
 - [Requirements](#requirements)
 - [✨Installation](#installation)
 	- [Automatic (Recommended)](#automatic-recommended)
 	- [Manual](#manual)
+	- [CSharp GlobalClasses](#csharp-globalclasses)
 - [Getting started](#getting-started)
 - [Guide](#guide)
 	- [GodotParadiseState](#godotparadisestate)
-		- [\_enter()](#_enter)
-		- [\_exit()](#_exit)
-		- [\_handle\_input(event)](#_handle_inputevent)
-		- [physics\_update(delta)](#physics_updatedelta)
-		- [update(delta)](#updatedelta)
-		- [\_on\_animation\_player\_finished(name: String)](#_on_animation_player_finishedname-string)
-		- [\_on\_animation\_finished()](#_on_animation_finished)
+		- [Enter()](#enter)
+		- [Exit()](#exit)
+		- [HandleInput(InputEvent @event)](#handleinputinputevent-event)
+		- [PhysicsUpdate(double delta)](#physicsupdatedouble-delta)
+		- [Update(double delta)](#updatedouble-delta)
+		- [OnAnimationPlayerFinished(string name)](#onanimationplayerfinishedstring-name)
+		- [OnAnimationFinished()](#onanimationfinished)
 	- [Signals](#signals)
 - [The Finite State Machine *(FSM)*](#the-finite-state-machine-fsm)
 	- [Exported parameters](#exported-parameters)
 	- [Accessible parameters](#accessible-parameters)
 	- [How to change the state](#how-to-change-the-state)
 	- [Functions](#functions)
-		- [change\_state(state: GodotParadiseState, params: Dictionary = {}, force: bool = false)](#change_statestate-godotparadisestate-params-dictionary---force-bool--false)
-		- [change\_state\_by\_name(name: String, params: Dictionary = {}, force: bool = false)](#change_state_by_namename-string-params-dictionary---force-bool--false)
-		- [enter\_state(state: GodotParadiseState, previous\_state: GodotParadiseState)](#enter_statestate-godotparadisestate-previous_state-godotparadisestate)
-		- [exit\_state(state: GodotParadiseState)](#exit_statestate-godotparadisestate)
-		- [get\_state(name: String)](#get_statename-string)
-		- [has\_state(name: String) -\> bool](#has_statename-string---bool)
-		- [current\_state\_is(state: GodotParadiseState) -\> bool](#current_state_isstate-godotparadisestate---bool)
-		- [current\_state\_name\_is(name: String) -\> bool](#current_state_name_isname-string---bool)
-		- [lock\_state\_machine()](#lock_state_machine)
-		- [unlock\_state\_machine()](#unlock_state_machine)
+		- [ChangeState(GodotParadiseState newState, Dictionary parameters, bool force = false)](#changestategodotparadisestate-newstate-dictionary-parameters-bool-force--false)
+		- [ChangeStateByName(string name, Dictionary parameters, bool force = false)](#changestatebynamestring-name-dictionary-parameters-bool-force--false)
+		- [EnterState(GodotParadiseState state)](#enterstategodotparadisestate-state)
+		- [ExitState(GodotParadiseState state)](#exitstategodotparadisestate-state)
+		- [GetStateByName(string name)](#getstatebynamestring-name)
+		- [bool CurrentStateIs(GodotParadiseState state)](#bool-currentstateisgodotparadisestate-state)
+		- [bool CurrentStateNameIs(string name)](#bool-currentstatenameisstring-name)
+		- [LockStateMachine()](#lockstatemachine)
+		- [UnlockStateMachine()](#unlockstatemachine)
+	- [Signals](#signals-1)
+- [✌️You are welcome to](#️you-are-welcome-to)
+- [🤝Contribution guidelines](#contribution-guidelines)
+- [📇Contact us](#contact-us)
+
+A finite state machine designed to cover 95% of use cases, providing essential functionality and a basic state node that can be extended.
+- [Requirements](#requirements)
+- [✨Installation](#installation)
+	- [Automatic (Recommended)](#automatic-recommended)
+	- [Manual](#manual)
+	- [CSharp GlobalClasses](#csharp-globalclasses)
+- [Getting started](#getting-started)
+- [Guide](#guide)
+	- [GodotParadiseState](#godotparadisestate)
+		- [Enter()](#enter)
+		- [Exit()](#exit)
+		- [HandleInput(InputEvent @event)](#handleinputinputevent-event)
+		- [PhysicsUpdate(double delta)](#physicsupdatedouble-delta)
+		- [Update(double delta)](#updatedouble-delta)
+		- [OnAnimationPlayerFinished(string name)](#onanimationplayerfinishedstring-name)
+		- [OnAnimationFinished()](#onanimationfinished)
+	- [Signals](#signals)
+- [The Finite State Machine *(FSM)*](#the-finite-state-machine-fsm)
+	- [Exported parameters](#exported-parameters)
+	- [Accessible parameters](#accessible-parameters)
+	- [How to change the state](#how-to-change-the-state)
+	- [Functions](#functions)
+		- [ChangeState(GodotParadiseState newState, Dictionary parameters, bool force = false)](#changestategodotparadisestate-newstate-dictionary-parameters-bool-force--false)
+		- [ChangeStateByName(string name, Dictionary parameters, bool force = false)](#changestatebynamestring-name-dictionary-parameters-bool-force--false)
+		- [EnterState(GodotParadiseState state)](#enterstategodotparadisestate-state)
+		- [ExitState(GodotParadiseState state)](#exitstategodotparadisestate-state)
+		- [GetStateByName(string name)](#getstatebynamestring-name)
+		- [bool CurrentStateIs(GodotParadiseState state)](#bool-currentstateisgodotparadisestate-state)
+		- [bool CurrentStateNameIs(string name)](#bool-currentstatenameisstring-name)
+		- [LockStateMachine()](#lockstatemachine)
+		- [UnlockStateMachine()](#unlockstatemachine)
 	- [Signals](#signals-1)
 - [✌️You are welcome to](#️you-are-welcome-to)
 - [🤝Contribution guidelines](#contribution-guidelines)
@@ -99,7 +132,6 @@ All the functions here are virtual, which means they can be overridden with the 
 
 In all states you have access to the `PreviousStates` and the extra `Parameters` you have exchanged between transition and transition.
 The `PreviousStates` are available only if you enabled the stack in the FSM.
-
 
 ```csharp
 using Godot;
@@ -174,10 +206,10 @@ You can use this function generically to execute custom logic when an AnimatedSp
 
 ## Signals
 - *StateEntered*
-- *StateFinished(next_state, params: Dictionary)*
+- *StateFinished(GodotParadiseState next_state, Dictionary parameters)*
 
 So for example if you want to implement a **Idle** state it's easy as:
-```py
+```csharp
 using Godot;
 using System;
 
@@ -193,7 +225,6 @@ public override void Exit():
 public override void PhysicsUpdate(double delta):
 	# detect the input direction to change to another state such as Walk or Crouch
 }
-
 
 ```
 

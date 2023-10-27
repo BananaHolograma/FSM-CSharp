@@ -20,31 +20,31 @@ Una máquina de estados finitos diseñada para cubrir el 95% de los casos de uso
 - [✨Instalacion](#instalacion)
 	- [Automatica (Recomendada)](#automatica-recomendada)
 	- [Manual](#manual)
+	- [CSharp GlobalClasses](#csharp-globalclasses)
 - [Guia](#guia)
 	- [GodotParadiseState](#godotparadisestate)
-		- [\_enter()](#_enter)
-		- [\_exit()](#_exit)
-		- [\_handle\_input(event)](#_handle_inputevent)
-		- [physics\_update(delta)](#physics_updatedelta)
-		- [update(delta)](#updatedelta)
-		- [\_on\_animation\_player\_finished(name: String)](#_on_animation_player_finishedname-string)
-		- [\_on\_animation\_finished()](#_on_animation_finished)
+		- [Enter()](#enter)
+		- [Exit()](#exit)
+		- [HandleInput(InputEvent @event)](#handleinputinputevent-event)
+		- [PhysicsUpdate(double delta)](#physicsupdatedouble-delta)
+		- [Update(double delta)](#updatedouble-delta)
+		- [OnAnimationPlayerFinished(string name)](#onanimationplayerfinishedstring-name)
+		- [OnAnimationFinished()](#onanimationfinished)
 	- [Señales](#señales)
 - [The Finite State Machine *(FSM)*](#the-finite-state-machine-fsm)
 	- [Parámetros exportados](#parámetros-exportados)
 	- [Parámetros accessibles como variable](#parámetros-accessibles-como-variable)
 	- [Como cambiar de estado](#como-cambiar-de-estado)
 	- [Funciones](#funciones)
-		- [change\_state(state: GodotParadiseState, params: Dictionary = {}, force: bool = false)](#change_statestate-godotparadisestate-params-dictionary---force-bool--false)
-		- [change\_state\_by\_name(name: String, params: Dictionary = {}, force: bool = false)](#change_state_by_namename-string-params-dictionary---force-bool--false)
-		- [enter\_state(state: GodotParadiseState, previous\_state: GodotParadiseState)](#enter_statestate-godotparadisestate-previous_state-godotparadisestate)
-		- [exit\_state(state: GodotParadiseState)](#exit_statestate-godotparadisestate)
-		- [get\_state(name: String)](#get_statename-string)
-		- [has\_state(name: String) -\> bool](#has_statename-string---bool)
-		- [current\_state\_is(state: GodotParadiseState) -\> bool](#current_state_isstate-godotparadisestate---bool)
-		- [current\_state\_name\_is(name: String) -\> bool](#current_state_name_isname-string---bool)
-		- [lock\_state\_machine()](#lock_state_machine)
-		- [unlock\_state\_machine()](#unlock_state_machine)
+		- [ChangeState(GodotParadiseState newState, Dictionary parameters, bool force = false)](#changestategodotparadisestate-newstate-dictionary-parameters-bool-force--false)
+		- [ChangeStateByName(string name, Dictionary parameters, bool force = false)](#changestatebynamestring-name-dictionary-parameters-bool-force--false)
+		- [EnterState(GodotParadiseState state)](#enterstategodotparadisestate-state)
+		- [ExitState(GodotParadiseState state)](#exitstategodotparadisestate-state)
+		- [GetStateByName(string name)](#getstatebynamestring-name)
+		- [bool CurrentStateIs(GodotParadiseState state)](#bool-currentstateisgodotparadisestate-state)
+		- [bool CurrentStateNameIs(string name)](#bool-currentstatenameisstring-name)
+		- [LockStateMachine()](#lockstatemachine)
+		- [UnlockStateMachine()](#unlockstatemachine)
 	- [Señales](#señales-1)
 - [✌️Eres bienvenido a](#️eres-bienvenido-a)
 - [🤝Normas de contribución](#normas-de-contribución)
@@ -84,153 +84,170 @@ La máquina de estados finitos se puede añadir como cualquier otro nodo del ár
 ![fsm-added-scene-tree](https://github.com/GodotParadise/FSM-Csharp/blob/main/images/fsm_added_scene_tree.png)
 ![fsm-example](https://github.com/GodotParadise/FSM-Csharp/blob/main/images/fsm_example.png)
 
-⚠️ La máquina de estados finitos **siempre necesita al menos un estado por defecto** con el que empezar, este estado por defecto se puede establecer en la variable exportada `current_state`. Una vez hecho esto, al ejecutar la escena este será el estado actual de la máquina hasta que se den las condiciones que cambien el estado. Aunque nada se romperá sin él, tener un estado inicial definido es una buena práctica para empezar.
+⚠️ La máquina de estados finitos **siempre necesita al menos un estado por defecto** con el que empezar, este estado por defecto se puede establecer en la variable exportada `CurrentState`. Una vez hecho esto, al ejecutar la escena este será el estado actual de la máquina hasta que se den las condiciones que cambien el estado. Aunque nada se romperá sin él, tener un estado inicial definido es una buena práctica para empezar.
 
-Siempre habrá un solo `physic_process()` o `_process()` ya que es la máquina principal la que se encarga de llamar a los métodos virtuales de cada estado. Si tu estado sobreescribe `physics_update()` se ejecutará en el bloque de `physic_process()`
+Siempre habrá un solo `_PhysicProcess()` o `_Process_()` ya que es la máquina principal la que se encarga de llamar a los métodos virtuales de cada estado. Si tu estado sobreescribe `PhysicsUpdate()` se ejecutará en el bloque de `_PhysicProcess()`
 
-`_enter()` y `_exit()` son llamadas cuando el nuevo estado se convierte en el actual y cuando se va a transicionar a otro estado. Son útiles para limpiar o preparar algún tipo de parámetros dentro del estado para ser usados sólo en este estado.
+`Enter()` y `Exit()` son llamadas cuando el nuevo estado se convierte en el actual y cuando se va a transicionar a otro estado. Son útiles para limpiar o preparar algún tipo de parámetros dentro del estado para ser usados sólo en este estado.
 
 # Guia
 ## GodotParadiseState
 Todas las funciones aquí son virtuales, lo que significa que pueden ser sobrescritas con la funcionalidad deseada en cada caso.
 
-En todos los estados tienes acceso a los `previous_states` y a los `params` extra que has intercambiado entre transición y transición. Los `previous_states` sólo están disponibles si has habilitado la pila en el FSM.
+En todos los estados tienes acceso a los `PreviousStates` y a los `parameters` extra que has intercambiado entre transición y transición. Los `PreviousStates` sólo están disponibles si has habilitado la pila en el FSM.
 
-```py
-class_name GodotParadiseState extends Node
+```csharp
+using Godot;
+using Godot.Collections;
 
-signal state_entered
-signal state_finished(next_state, params: Dictionary)
-
-var previous_states: Array[GodotParadiseState] = []
-var params: Dictionary = {}
-
-func _enter() -> void:
-	pass
-	
-
-func _exit() -> void:
-	pass
-	
-
-func handle_input(_event):
-	pass	
+public partial class GodotParadiseState : Node
+{
+	[Signal]
+	public delegate void StateEnteredEventHandler();
 
 
-func physics_update(_delta):
-	pass
-	
-	
-func update(_delta):
-	pass
-	
+	[Signal]
+	public delegate void StateFinishedEventHandler(string nextState, Dictionary parameters);
 
-func _on_animation_player_finished(_name: String):
-	pass
+	public Array<GodotParadiseState> PreviousStates = new();
+	public Dictionary parameters = new();
 
 
-func _on_animation_finished():
-	pass
+
+	public virtual void Enter()
+	{
+
+	}
+
+	public virtual void Exit()
+	{
+
+	}
+
+	public virtual void HandleInput(InputEvent @event)
+	{
+
+	}
+
+	public virtual void PhysicsUpdate(double delta)
+	{
+
+	}
+
+	public virtual void Update(double delta)
+	{
+
+	}
+
+	public virtual void OnAnimationPlayerFinished(string Name)
+	{
+
+	}
+
+	public virtual void OnAnimationFinished()
+	{
+
+	}
+}
+
 ```
 
-### _enter()
+### Enter()
 Esta función se ejecuta cuando el estado entra por primera vez como estado actual.
-### _exit()
+### Exit()
 Esta función se ejecuta cuando el estado deja de ser el estado actual y pasa al siguiente.
-### _handle_input(event)
+### HandleInput(InputEvent @event)
 En caso de que quieras personalizar como este estado maneja las entradas en tu juego este es el lugar para hacerlo. El tipo de evento es InputEvent
-### physics_update(delta)
+### PhysicsUpdate(double delta)
 Esta función se ejecuta en cada fotograma del proceso físico de la máquina de estados finitos
-### update(delta)
+### Update(double delta)
 Esta función se ejecuta en cada fotograma del proceso de la máquina de estados finitos
-### _on_animation_player_finished(name: String)
+### OnAnimationPlayerFinished(string name)
 Puedes usar esta función genéricamente para ejecutar lógica personalizada cuando un AnimationPlayer termina cualquier animación. Esta recibe el nombre de la animación como parámetro para evitar errores y ser consistente con la señal original.
-### _on_animation_finished()
+### OnAnimationFinished()
 Puede usar esta función genéricamente para ejecutar lógica personalizada cuando un AnimatedSprite(2/3)D termina cualquier animación. Esta función no recibe ningún parámetro para evitar errores y ser consistente con la señal original.
 
 ## Señales
-- *state_entered*
-- *state_finished(next_state, params: Dictionary)*
+- *StateEntered*
+- *StateFinished(GodotParadiseState next_state, Dictionary parameters)*
 
 Si por ejemplo quieres implementar un estado **Idle** es tan fácil como:
-```py
-class_name Idle extends GodotParadiseState
+```csharp
+using Godot;
+using System;
 
-func _enter() -> void:
+[GlobalClass, Icon("res://addons/finite_state_machine/state_icon.png")]
+public partial class Idle : GodotParadiseState {
+public override void Enter():
 	# play animations...
 	# set velocity to zero...
 
-func _exit() -> void:
-	# stop animation...s
+public override void Exit():
+	# stop animations...
 
-func _physics_update(delta):
+public override void PhysicsUpdate(double delta):
 	# detect the input direction to change to another state such as Walk or Crouch
+}
+
 ```
 
 # The Finite State Machine *(FSM)*
 ## Parámetros exportados
-- current_state: GodotParadiseState = null
-- stack_capacity: int = 3
-- flush_stack_when_reach_capacity: bool = false
-- enable_stack: bool = true
+- CurrentState: GodotParadiseState = null
+- StackCapacity: int = 3
+- FlushStackWhenReachCapacity: bool = false
+- EnableStack: bool = true
 ## Parámetros accessibles como variable
-- states: Dictionary
-- states_stack: Array[GodotParadiseState]
-- locked: bool
+- States: Dictionary
+- StatesStack: Array[GodotParadiseState]
+- Locked: bool
 
 Cuando este nodo está listo en el árbol de escenas, todos los estados detectados como hijos **en cualquier nivel de anidamiento** se guardan en un diccionario para facilitar el acceso por sus nombres de nodo.
 
-La **FSM** se conecta a todas las señales `state_finished` de los estados anidados existentes. Cuando se produce un cambio de estado y la pila está habilitada, el estado anterior se añade a la pila `states_stack`. Puedes definir una `stack_capacity` para definir el número de estados anteriores que quieres guardar. Esta pila es accesible en cada estado para manejar condiciones en las que necesitamos saber qué estados han sido transicionados previamente. El valor locked permite bloquear o desbloquear la máquina de estados para la ejecución de estados. Se puede reanudar reseteándolo a false. Cuando está bloqueada **la pila también está deshabilitada.**
+La **FSM** se conecta a todas las señales `StateFinished` de los estados anidados existentes. Cuando se produce un cambio de estado y la pila está habilitada, el estado anterior se añade a la pila `StatesStack`. Puedes definir una `StackCapacity` para definir el número de estados anteriores que quieres guardar. Esta pila es accesible en cada estado para manejar condiciones en las que necesitamos saber qué estados han sido transicionados previamente. El valor locked permite bloquear o desbloquear la máquina de estados para la ejecución de estados. Se puede reanudar reseteándolo a false. Cuando está bloqueada **la pila también está deshabilitada.**
 
 ## Como cambiar de estado
 Este es un ejemplo de código que cambia del estado **Idle** a **Run**:
-```py
-if not horizontal_direction.is_zero_approx() and owner.is_on_floor():
-	## El primer parámetro puede ser la clase o el nombre de la clase en formato String
-	state_finished.emit("Run", {})
-	#or 
-	state_finished.emit(Run, {"sprint_time": 4.0})
-	return
+```csharp
+	EmitSignal(SignalName.StateFinished, "Walk", new());
 ```
-Como puedes ver, dentro de cada estado individual, tienes la opción de emitir la señal `state_finished`, que será monitorizada por la máquina de estados padre.
+Como puedes ver, dentro de cada estado individual, tienes la opción de emitir la señal `StateFinished`, que será monitorizada por la máquina de estados padre.
 
 ## Funciones
 Normalmente **no se desea llamar a estas funciones manualmente**, es preferible emitir señales desde los propios estados y dejar que la máquina de estados finitos reaccione a estas señales para ejecutar acciones como cambiar el estado. Por cierto, nada te impide hacerlo y puede ser necesario en tu caso de uso.
 
-### change_state(state: GodotParadiseState, params: Dictionary = {}, force: bool = false)
-Cambia el estado actual al siguiente estado pasado como parámetro si no son el mismo. Esta acción puede forzarse con el tercer parámetro force. Si el estado puede ser transitado, se ejecutará la función `_exit()` del estado actual y la función `_enter()` del siguiente estado. En esta transición el nuevo estado puede recibir parámetros externos. Emite la señal `state_changed`
+### ChangeState(GodotParadiseState newState, Dictionary parameters, bool force = false)
+Cambia el estado actual al siguiente estado pasado como parámetro si no son el mismo. Esta acción puede forzarse con el tercer parámetro force. Si el estado puede ser transitado, se ejecutará la función `Exit()` del estado actual y la función `Enter()` del siguiente estado. En esta transición el nuevo estado puede recibir parámetros externos. Emite la señal `StateChanged`
 
-### change_state_by_name(name: String, params: Dictionary = {}, force: bool = false)
-Realiza la misma acción que la función `change_state` pero recibiendo el estado con el nombre que tiene en el diccionario de estados. Por ejemplo, si tenemos un estado de nodo llamado **'Idle'** en la escena, se puede cambiar usando `change_state_by_name("Idle")`
+### ChangeStateByName(string name, Dictionary parameters, bool force = false)
+Realiza la misma acción que la función `ChangeState` pero recibiendo el estado con el nombre que tiene en el diccionario de estados. Por ejemplo, si tenemos un estado de nodo llamado **'Idle'** en la escena, se puede cambiar usando `ChangeStateByName("Idle")`
 
-### enter_state(state: GodotParadiseState, previous_state: GodotParadiseState)
-Esta función es llamada cuando un nuevo estado se convierte en el estado actual. Durante este proceso, la señal `state_entered`  es emitida.
+### EnterState(GodotParadiseState state)
+Esta función es llamada cuando un nuevo estado se convierte en el estado actual. Durante este proceso, la señal `StateEntered`  es emitida.
 
 
-### exit_state(state: GodotParadiseState)
-Sale del estado actual hacia el proporcionado como parámetro en la función, ejecuta la función `_exit()` antes de salir.
-### get_state(name: String)
-Retorna el nodo de estado usando la clave del diccionario de la variable `states` en la FSM si existe o nulo si no.
-### has_state(name: String) -> bool
-Comprueba que el estado existe en el diccionario de estados de la FSM
+### ExitState(GodotParadiseState state)
+Sale del estado actual hacia el proporcionado como parámetro en la función, ejecuta la función `Exit()` antes de salir.
+### GetStateByName(string name)
+Retorna el nodo de estado usando la clave del diccionario de la variable `States` en la FSM si existe o nulo si no.
 
-### current_state_is(state: GodotParadiseState) -> bool
+### bool CurrentStateIs(GodotParadiseState state)
 Comprueba que el estado actual es el proporcionado como parámetro
 
-### current_state_name_is(name: String) -> bool
+### bool CurrentStateNameIs(string name)
 Mismo que el anterior pero usando la clave del diccionario en formato String.
 
-### lock_state_machine()
-Bloquea la FSM, todos los procesos son seteados a false y el stack es deshabilitado. Esta función es llamada automáticamente cuando la variable `locked` cambia a false.
+### LockStateMachine()
+Bloquea la FSM, todos los procesos son seteados a false y el stack es deshabilitado. Esta función es llamada automáticamente cuando la variable `Locked` cambia a false.
 
 
-### unlock_state_machine()
-Desbloquea la máquina si estaba bloqueado, todos los procesos son seteados a true y el stack es habilitado de nuevo. Esta función es llamada automáticamente cuando la variable `locked` cambia a true.
+### UnlockStateMachine()
+Desbloquea la máquina si estaba bloqueado, todos los procesos son seteados a true y el stack es habilitado de nuevo. Esta función es llamada automáticamente cuando la variable `Locked` cambia a true.
 
 ## Señales
-- *state_changed(from_state: GodotParadiseState, state: GodotParadiseState)*
-- *stack_pushed(new_state: GodotParadiseState, stack:Array[GodotParadiseState])*
-- *stack_flushed(flushed_states: Array[GodotParadiseState])*
+- *StateChanged(GodotParadiseState fromState, GodotParadiseState state)*
+- *StackPushed(GodotParadiseState newState, Array<GodotParadiseState> stack)*
+- *StackFlushed(Array<GodotParadiseState> stack)*
 
 
 # ✌️Eres bienvenido a
