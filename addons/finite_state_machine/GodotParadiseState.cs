@@ -9,7 +9,7 @@ public partial class GodotParadiseState : Node
 
 
 	[Signal]
-	public delegate void StateFinishedEventHandler(GodotParadiseState nextState, Dictionary parameters);
+	public delegate void StateFinishedEventHandler(string nextState, Dictionary parameters);
 
 	public Array<GodotParadiseState> PreviousStates = new();
 	public Dictionary parameters = new();
@@ -26,7 +26,7 @@ public partial class GodotParadiseState : Node
 
 	}
 
-	public virtual void HandleInput(InputEvent inputEvent)
+	public virtual void HandleInput(InputEvent @event)
 	{
 
 	}

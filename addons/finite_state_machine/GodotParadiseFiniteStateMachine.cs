@@ -13,9 +13,6 @@
 
 using Godot;
 using Godot.Collections;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 public partial class GodotParadiseFiniteStateMachine : Node
 {
@@ -33,7 +30,7 @@ public partial class GodotParadiseFiniteStateMachine : Node
     [Export]
     public bool FlushStackWhenReachCapacity = false;
     [Export]
-    public bool EnableStack = false;
+    public bool EnableStack { get; set; } = true;
 
     public Dictionary States = new();
     public Array<GodotParadiseState> StatesStack = new();
@@ -86,6 +83,7 @@ public partial class GodotParadiseFiniteStateMachine : Node
             ExitState(CurrentState);
         }
 
+        PushStateToStack(CurrentState);
         EmitSignal(SignalName.StateChanged, CurrentState, newState);
 
         CurrentState = newState;
@@ -161,10 +159,10 @@ public partial class GodotParadiseFiniteStateMachine : Node
                 {
                     StatesStack.RemoveAt(0);
                 }
-
-                StatesStack.Add(state);
-                EmitSignal(SignalName.StackPushed, state, StatesStack);
             }
+
+            StatesStack.Add(state);
+            EmitSignal(SignalName.StackPushed, state, StatesStack);
         }
     }
 
@@ -174,7 +172,6 @@ public partial class GodotParadiseFiniteStateMachine : Node
         SetPhysicsProcess(false);
         SetProcessInput(false);
         SetProcessUnhandledInput(false);
-        EnableStack = false;
     }
 
     public void UnlockStateMachine()
@@ -183,7 +180,6 @@ public partial class GodotParadiseFiniteStateMachine : Node
         SetPhysicsProcess(true);
         SetProcessInput(true);
         SetProcessUnhandledInput(true);
-        EnableStack = true;
     }
 
     private void AddStateToDictionary(GodotParadiseState state)
@@ -213,9 +209,14 @@ public partial class GodotParadiseFiniteStateMachine : Node
 
     }
 
-    private void OnFinishedState(GodotParadiseState nextState, Dictionary parameters)
+    private void OnFinishedState(string nextState, Dictionary parameters)
     {
-        ChangeState(nextState, parameters);
+        GodotParadiseState state = GetStateByName(nextState);
+
+        if (state is not null)
+        {
+            ChangeState(state, parameters);
+        }
     }
 
 
