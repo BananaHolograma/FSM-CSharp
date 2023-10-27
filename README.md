@@ -61,6 +61,40 @@ You can download this plugin from the official [Godot asset library](https://god
 ##  Manual 
 To manually install the plugin, create an **"addons"** folder at the root of your Godot project and then download the contents from the **"addons"** folder of this repository.
 
+## CSharp custom resource registry
+In order to make available in the Godot editor the custom classes you've created, that unlike gdscript, in C# you need to install this addon [Godot-Mono-CustomResourceRegistry](https://github.com/Atlinx/Godot-Mono-CustomResourceRegistry) in your project.
+
+So for example if you create a `Idle` state that inherits from `GodotParadiseState` in this way, you cannot add this as child in the scene tree via editor until you install the mentioned addon:
+```csharp
+using Godot;
+using System;
+
+public partial class Idle : GodotParadiseState
+{
+
+    public override void Enter()
+    {
+       GD.Print("Idle start");
+    }
+}
+
+// Instead this syntax where icon parameter is optional, you can leave it empty
+using Godot;
+using System;
+using MonoCustomResourceRegistry;
+
+[RegisteredType(nameof(Idle), "res://custom_icon.png", nameof(GodotParadiseState))]
+public partial class Idle : GodotParadiseState
+{
+
+    public override void Enter()
+    {
+       GD.Print("Idle start");
+    }
+}
+
+```
+
 # Getting started
 The finite state machine can be added as any other node in the scene tree where you want to use it. 
 ![fsm-add-node](https://github.com/GodotParadise/FSM-Csharp/blob/main/images/fsm_add_child.png)

@@ -11,8 +11,8 @@ public partial class GodotParadiseState : Node
 	[Signal]
 	public delegate void StateFinishedEventHandler(GodotParadiseState nextState, Dictionary parameters);
 
-	Array<GodotParadiseState> PreviousStates = new();
-	Dictionary parameters = new();
+	public Array<GodotParadiseState> PreviousStates = new();
+	public Dictionary parameters = new();
 
 
 

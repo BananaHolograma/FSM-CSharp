@@ -8,6 +8,11 @@
 
 config_version=5
 
+[MonoCustomResourceRegistry]
+
+SearchType=0
+ResourceScriptDirectories=["res://"]
+
 [application]
 
 config/name="GodotParadiseFSMCsharp"
@@ -21,6 +26,10 @@ config/icon="res://icon.svg"
 [dotnet]
 
 project/assembly_name="GodotParadiseFSMCsharp"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/MonoCustomResourceRegistry/plugin.cfg", "res://addons/finite_state_machine/plugin.cfg")
 
 [rendering]
 

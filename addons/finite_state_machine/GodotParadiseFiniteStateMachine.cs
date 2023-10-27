@@ -15,6 +15,7 @@ using Godot;
 using Godot.Collections;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public partial class GodotParadiseFiniteStateMachine : Node
 {
@@ -38,7 +39,134 @@ public partial class GodotParadiseFiniteStateMachine : Node
     public Array<GodotParadiseState> StatesStack = new();
     public bool Locked = false;
 
+    public override void _Ready()
+    {
+        InitializeStateNodes();
 
+        foreach (GodotParadiseState state in States.Values)
+        {
+            state.StateFinished += OnFinishedState;
+        }
+
+        if (CurrentState is not null)
+        {
+            ChangeState(CurrentState, new(), true);
+        }
+
+        UnlockStateMachine();
+
+        StackPushed += OnStackPushed;
+    }
+
+
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        CurrentState.HandleInput(@event);
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        CurrentState.PhysicsUpdate(delta);
+    }
+
+    public override void _Process(double delta)
+    {
+        CurrentState.Update(delta);
+    }
+
+    public void ChangeState(GodotParadiseState newState, Dictionary parameters, bool force = false)
+    {
+        if (!force && CurrentStateIs(newState))
+        {
+            return;
+        }
+
+        if (CurrentState is not null)
+        {
+            ExitState(CurrentState);
+        }
+
+        EmitSignal(SignalName.StateChanged, CurrentState, newState);
+
+        CurrentState = newState;
+        CurrentState.parameters = parameters;
+
+        EnterState(newState);
+    }
+
+    public void ChangeStateByName(string name, Dictionary parameters, bool force = false)
+    {
+        GodotParadiseState state = GetStateByName(name);
+
+        if (state is not null)
+        {
+            ChangeState(state, parameters, force);
+        }
+
+        GD.PushError($"GodotParadiseFSMPlugin: The state {name} does not exists on this FiniteStateMachine");
+    }
+
+    public void EnterState(GodotParadiseState state)
+    {
+        state.Enter();
+        state.EmitSignal(GodotParadiseState.SignalName.StateEntered);
+    }
+
+
+    public void ExitState(GodotParadiseState state)
+    {
+        state.Exit();
+    }
+
+
+    public bool CurrentStateIs(GodotParadiseState state)
+    {
+        return state.Name.ToString().ToLower().Equals(CurrentState.Name.ToString().ToLower());
+    }
+
+    public bool CurrentStateNameIs(string name)
+    {
+        GodotParadiseState state = GetStateByName(name);
+
+        if (state is not null)
+        {
+            return CurrentStateIs(state);
+        }
+
+        return false;
+    }
+
+    public GodotParadiseState GetStateByName(string name)
+    {
+        if (States.ContainsKey(name))
+        {
+            return (GodotParadiseState)States[name];
+        }
+
+        return null;
+    }
+
+    public void PushStateToStack(GodotParadiseState state)
+    {
+        if (EnableStack && StackCapacity > 0)
+        {
+            if (StatesStack.Count >= StackCapacity)
+            {
+                if (FlushStackWhenReachCapacity)
+                {
+                    EmitSignal(SignalName.StackFlushed, StatesStack);
+                    StatesStack.Clear();
+                }
+                else
+                {
+                    StatesStack.RemoveAt(0);
+                }
+
+                StatesStack.Add(state);
+                EmitSignal(SignalName.StackPushed, state, StatesStack);
+            }
+        }
+    }
 
     public void LockStateMachine()
     {
@@ -57,4 +185,47 @@ public partial class GodotParadiseFiniteStateMachine : Node
         SetProcessUnhandledInput(true);
         EnableStack = true;
     }
+
+    private void AddStateToDictionary(GodotParadiseState state)
+    {
+        if (state.IsInsideTree())
+        {
+            States.Add(state.Name, GetNode(state.GetPath()));
+        }
+    }
+
+
+    private void InitializeStateNodes(Node node = null)
+    {
+        Array<Node> childrens = node != null ? node.GetChildren(true) : GetChildren(true);
+
+        foreach (Node child in childrens)
+        {
+            if (child is GodotParadiseState state)
+            {
+                AddStateToDictionary(state);
+            }
+            else
+            {
+                InitializeStateNodes(child);
+            }
+        }
+
+    }
+
+    private void OnFinishedState(GodotParadiseState nextState, Dictionary parameters)
+    {
+        ChangeState(nextState, parameters);
+    }
+
+
+    private void OnStackPushed(GodotParadiseState newState, Array<GodotParadiseState> stack)
+    {
+        foreach (GodotParadiseState state in States.Values)
+        {
+            state.PreviousStates = stack;
+        }
+    }
+
+
 }
