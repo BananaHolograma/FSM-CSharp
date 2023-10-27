@@ -86,90 +86,115 @@ The finite state machine can be added as any other node in the scene tree where 
 ![fsm-added-scene-tree](https://github.com/GodotParadise/FSM-Csharp/blob/main/images/fsm_added_scene_tree.png)
 ![fsm-example](https://github.com/GodotParadise/FSM-Csharp/blob/main/images/fsm_example.png)
 
-⚠️ The finite state machine **always need at least one default state** to start with, this default state can be set on the exported variable `current_state`. Once this is done, when executing the scene this will be the current state of the machine until the conditions that change the state occur. 
+⚠️ The finite state machine **always need at least one default state** to start with, this default state can be set on the exported variable `CurrentState`. Once this is done, when executing the scene this will be the current state of the machine until the conditions that change the state occur. 
 While nothing will break without it, having a defined initial state is good practice to start from.
 
-There will always be only one `physic_process()` or `_process()` since it is the main machine that is in charge of calling the virtual methods of each state.If your state overrides `physics_update()` will be executed as `physic_process()`
+There will always be only one `_PhysicProcess()` or `_Process_()` since it is the main machine that is in charge of calling the virtual methods of each state.If your state overrides `PhysicsUpdate()` will be executed as `_PhysicProcess()`
 
-`_enter()` and `_exit()` are called when the new state becomes the current and when it will transition to another state. They are useful to clean up or get ready some sort of parameters inside the state to be used only in this state.
+`Enter()` and `Exit()` are called when the new state becomes the current and when it will transition to another state. They are useful to clean up or get ready some sort of parameters inside the state to be used only in this state.
  
 # Guide
 ## GodotParadiseState
 All the functions here are virtual, which means they can be overridden with the desired functionality in each case.
 
-In all states you have access to the `previous_states` and the extra `params` you have exchanged between transition and transition.
-The `previous_states` are available only if you enabled the stack in the FSM.
+In all states you have access to the `PreviousStates` and the extra `Parameters` you have exchanged between transition and transition.
+The `PreviousStates` are available only if you enabled the stack in the FSM.
 
 
-```py
-class_name GodotParadiseState extends Node
+```csharp
+using Godot;
+using Godot.Collections;
 
-signal state_entered
-signal state_finished(next_state, params: Dictionary)
-
-var previous_states: Array[GodotParadiseState] = []
-var params: Dictionary = {}
-
-func _enter() -> void:
-	pass
-	
-
-func _exit() -> void:
-	pass
-	
-
-func handle_input(_event):
-	pass	
+public partial class GodotParadiseState : Node
+{
+	[Signal]
+	public delegate void StateEnteredEventHandler();
 
 
-func physics_update(_delta):
-	pass
-	
-	
-func update(_delta):
-	pass
-	
+	[Signal]
+	public delegate void StateFinishedEventHandler(string nextState, Dictionary parameters);
 
-func _on_animation_player_finished(_name: String):
-	pass
+	public Array<GodotParadiseState> PreviousStates = new();
+	public Dictionary parameters = new();
 
 
-func _on_animation_finished():
-	pass
+
+	public virtual void Enter()
+	{
+
+	}
+
+	public virtual void Exit()
+	{
+
+	}
+
+	public virtual void HandleInput(InputEvent @event)
+	{
+
+	}
+
+	public virtual void PhysicsUpdate(double delta)
+	{
+
+	}
+
+	public virtual void Update(double delta)
+	{
+
+	}
+
+	public virtual void OnAnimationPlayerFinished(string Name)
+	{
+
+	}
+
+	public virtual void OnAnimationFinished()
+	{
+
+	}
+}
+
 ```
 
-### _enter()
+### Enter()
 This function executes when the state enters for the first time as the current state.
-### _exit()
+### Exit()
 This function executes when the state exits from being the current state and transitions to the next one.
-### _handle_input(event)
+### HandleInput(InputEvent @event)
 In case you want to customize how this state handle the inputs in your game this is the place to do that. The event type is InputEvent
-### physics_update(delta)
+### PhysicsUpdate(double delta)
 This function executes on each frame of the finite state machine's physic process
-### update(delta)
+### Update(double delta)
 This function executes on each frame of the finite state machine's process
-### _on_animation_player_finished(name: String)
+### OnAnimationPlayerFinished(string name)
 You can use this function generically to execute custom logic when an AnimationPlayer finishes any animation. This receive the animation name as parameter to avoid errors and be consistent with the original signal.
-### _on_animation_finished()
+### OnAnimationFinished()
 You can use this function generically to execute custom logic when an AnimatedSprite(2/3)D finishes any animation. This does not receive any params to avoid errors and be consistent with the original signal.
 
 ## Signals
-- *state_entered*
-- *state_finished(next_state, params: Dictionary)*
+- *StateEntered*
+- *StateFinished(next_state, params: Dictionary)*
 
 So for example if you want to implement a **Idle** state it's easy as:
 ```py
-class_name Idle extends GodotParadiseState
+using Godot;
+using System;
 
-func _enter() -> void:
+[GlobalClass, Icon("res://addons/finite_state_machine/state_icon.png")]
+public partial class Idle : GodotParadiseState {
+public override void Enter():
 	# play animations...
 	# set velocity to zero...
 
-func _exit() -> void:
-	# stop animation...s
+public override void Exit():
+	# stop animations...
 
-func _physics_update(delta):
+public override void PhysicsUpdate(double delta):
 	# detect the input direction to change to another state such as Walk or Crouch
+}
+
+
 ```
 
 # The Finite State Machine *(FSM)*
