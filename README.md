@@ -185,15 +185,16 @@ using System;
 
 [GlobalClass, Icon("res://addons/finite_state_machine/state_icon.png")]
 public partial class Idle : GodotParadiseState {
-public override void Enter():
-	# play animations...
-	# set velocity to zero...
-
-public override void Exit():
-	# stop animations...
-
-public override void PhysicsUpdate(double delta):
-	# detect the input direction to change to another state such as Walk or Crouch
+	public override void Enter() {
+		// play animations...
+		// set velocity to zero...
+	}
+	public override void Exit() {
+		// stop animations...
+	}
+	public override void PhysicsUpdate(double delta) {
+		// detect the input direction to change to another state such as Walk or Crouch
+	}
 }
 
 ```
@@ -218,9 +219,23 @@ The locked value enables the state machine to be locked or unlocked for state ex
 ## How to change the state
 This is an example of code that changes state from Idle to Run:
 ```csharp
-	EmitSignal(SignalName.StateFinished, "Walk", new());
+using Godot;
+using System;
+
+[GlobalClass, Icon("res://addons/finite_state_machine/state_icon.png")]
+public partial class Idle : GodotParadiseState {
+
+	public override void PhysicsUpdate(double delta) {
+		Vector2 InputDirection = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
+
+		 if (!InputDirection.IsZeroApprox()) {
+			EmitSignal(SignalName.StateFinished, "Walk", new()); // Instead of empty Dictionary new() you can also pass parameters here
+        }
+	}
+}
 ```
 As you can see, within each individual state, you have the option to emit the `StateFinished` signal, which will be monitored by the parent state machine.
+You can find a more complex example in the repository [FirstPersonController](https://github.com/GodotParadise/First-Person-Controller/tree/main/first_person_controller/state_machine)
 
 ## Functions
 Usually **you don't really want to call this functions manually**, it is preferable to emit signals from the states themselves and let the finite state machine react to these signals in order to execute actions such as changing the state. By the way, nothing stops you yo do that and may be needed in your use case.

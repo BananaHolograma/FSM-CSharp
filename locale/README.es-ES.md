@@ -213,9 +213,24 @@ La **FSM** se conecta a todas las señales `StateFinished` de los estados anidad
 ## Como cambiar de estado
 Este es un ejemplo de código que cambia del estado **Idle** a **Run**:
 ```csharp
-	EmitSignal(SignalName.StateFinished, "Walk", new());
+using Godot;
+using System;
+
+[GlobalClass, Icon("res://addons/finite_state_machine/state_icon.png")]
+public partial class Idle : GodotParadiseState {
+
+	public override void PhysicsUpdate(double delta) {
+		Vector2 InputDirection = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
+
+		 if (!InputDirection.IsZeroApprox()) {
+			EmitSignal(SignalName.StateFinished, "Walk", new()); // En lugar de un dictionario vacio Dictionary new() puedes pasarlo con parámetros aqui
+        }
+	}
+}
 ```
 Como puedes ver, dentro de cada estado individual, tienes la opción de emitir la señal `StateFinished`, que será monitorizada por la máquina de estados padre.
+
+Puedes encontrar un ejemplo mas complejo en el repositorio [FirstPersonController](https://github.com/GodotParadise/First-Person-Controller/tree/main/first_person_controller/state_machine)
 
 ## Funciones
 Normalmente **no se desea llamar a estas funciones manualmente**, es preferible emitir señales desde los propios estados y dejar que la máquina de estados finitos reaccione a estas señales para ejecutar acciones como cambiar el estado. Por cierto, nada te impide hacerlo y puede ser necesario en tu caso de uso.
