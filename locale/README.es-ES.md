@@ -14,12 +14,13 @@
 
 - - -
 
-Una máquina de estados finitos diseñada para cubrir el 95% de los casos de uso, proporcionando funcionalidad esencial y un nodo de estado básico que puede ampliarse.
+Una máquina de estados finitos diseñada para cubrir el 95% de los casos de uso, proporcionando funcionalidad esencial y un nodo de estado básico que puede ampliarse ahora en C#.
 
 - [Requerimientos](#requerimientos)
 - [✨Instalacion](#instalacion)
 	- [Automatica (Recomendada)](#automatica-recomendada)
 	- [Manual](#manual)
+	- [GDScript](#gdscript)
 	- [CSharp GlobalClasses](#csharp-globalclasses)
 - [Guia](#guia)
 	- [GodotParadiseState](#godotparadisestate)
@@ -59,6 +60,9 @@ Una máquina de estados finitos diseñada para cubrir el 95% de los casos de uso
 Puedes descargar este plugin desde la [Godot asset library](https://godotengine.org/asset-library/asset/2039) oficial usando la pestaña AssetLib de tu editor Godot. Una vez instalado, estás listo para empezar
 ## Manual 
 Para instalar manualmente el plugin, crea una carpeta **"addons"** en la raíz de tu proyecto Godot y luego descarga el contenido de la carpeta **"addons"** de este repositorio
+## GDScript
+Este plugin ha sido escrito también en GDscript y puedes encontrarlo en [FSM](https://github.com/GodotParadise/FSM)
+
 ## CSharp GlobalClasses
 Para mostrar en el arbol de escenas y poder añadir tus clases customizadas para los estados de la FSM, necesitas usar [GlobalClasses](https://docs.godotengine.org/en/stable/tutorials/scripting/c_sharp/c_sharp_global_classes.html)
 

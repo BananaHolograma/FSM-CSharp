@@ -11,47 +11,15 @@
 </p>
 
 [![es](https://img.shields.io/badge/lang-es-yellow.svg)](https://github.com/GodotParadise/FSM-Csharp/blob/main/locale/README.es-ES.md)
+- - -
+
+A finite state machine designed to cover 95% of use cases, providing essential functionality and a basic state node that can be extended now in C#.
 
 - [Requirements](#requirements)
 - [✨Installation](#installation)
 	- [Automatic (Recommended)](#automatic-recommended)
 	- [Manual](#manual)
-	- [CSharp GlobalClasses](#csharp-globalclasses)
-- [Getting started](#getting-started)
-- [Guide](#guide)
-	- [GodotParadiseState](#godotparadisestate)
-		- [Enter()](#enter)
-		- [Exit()](#exit)
-		- [HandleInput(InputEvent @event)](#handleinputinputevent-event)
-		- [PhysicsUpdate(double delta)](#physicsupdatedouble-delta)
-		- [Update(double delta)](#updatedouble-delta)
-		- [OnAnimationPlayerFinished(string name)](#onanimationplayerfinishedstring-name)
-		- [OnAnimationFinished()](#onanimationfinished)
-	- [Signals](#signals)
-- [The Finite State Machine *(FSM)*](#the-finite-state-machine-fsm)
-	- [Exported parameters](#exported-parameters)
-	- [Accessible parameters](#accessible-parameters)
-	- [How to change the state](#how-to-change-the-state)
-	- [Functions](#functions)
-		- [ChangeState(GodotParadiseState newState, Dictionary parameters, bool force = false)](#changestategodotparadisestate-newstate-dictionary-parameters-bool-force--false)
-		- [ChangeStateByName(string name, Dictionary parameters, bool force = false)](#changestatebynamestring-name-dictionary-parameters-bool-force--false)
-		- [EnterState(GodotParadiseState state)](#enterstategodotparadisestate-state)
-		- [ExitState(GodotParadiseState state)](#exitstategodotparadisestate-state)
-		- [GetStateByName(string name)](#getstatebynamestring-name)
-		- [bool CurrentStateIs(GodotParadiseState state)](#bool-currentstateisgodotparadisestate-state)
-		- [bool CurrentStateNameIs(string name)](#bool-currentstatenameisstring-name)
-		- [LockStateMachine()](#lockstatemachine)
-		- [UnlockStateMachine()](#unlockstatemachine)
-	- [Signals](#signals-1)
-- [✌️You are welcome to](#️you-are-welcome-to)
-- [🤝Contribution guidelines](#contribution-guidelines)
-- [📇Contact us](#contact-us)
-
-A finite state machine designed to cover 95% of use cases, providing essential functionality and a basic state node that can be extended.
-- [Requirements](#requirements)
-- [✨Installation](#installation)
-	- [Automatic (Recommended)](#automatic-recommended)
-	- [Manual](#manual)
+	- [GDScript](#gdscript)
 	- [CSharp GlobalClasses](#csharp-globalclasses)
 - [Getting started](#getting-started)
 - [Guide](#guide)
@@ -93,6 +61,8 @@ A finite state machine designed to cover 95% of use cases, providing essential f
 You can download this plugin from the official [Godot asset library](https://godotengine.org/asset-library/asset/2039) using the AssetLib tab in your godot editor. Once installed, you're ready to get started
 ##  Manual 
 To manually install the plugin, create an **"addons"** folder at the root of your Godot project and then download the contents from the **"addons"** folder of this repository.
+## GDScript
+This plugin has also been written in C# and you can find it on [FSM](https://github.com/GodotParadise/FSM)
 
 ## CSharp GlobalClasses
 In order to make available in the Godot editor the custom classes you've created, that unlike gdscript, in C# you need use Global classes.
