@@ -27,10 +27,6 @@ config/icon="res://icon.svg"
 
 project/assembly_name="GodotParadiseFSMCsharp"
 
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/finite_state_machine/plugin.cfg")
-
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
