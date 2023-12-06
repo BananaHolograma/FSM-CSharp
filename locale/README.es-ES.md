@@ -75,10 +75,10 @@ using System;
 [GlobalClass, Icon("res://addons/finite_state_machine/state_icon.png")]
 public partial class Idle : GodotParadiseState
 {
-    public override void Enter()
-    {
-       GD.Print("Idle start");
-    }
+	public override void Enter()
+	{
+	   GD.Print("Idle start");
+	}
 }
 
 ```
@@ -225,7 +225,7 @@ public partial class Idle : GodotParadiseState {
 
 		 if (!InputDirection.IsZeroApprox()) {
 			EmitSignal(SignalName.StateFinished, "Walk", new()); // En lugar de un dictionario vacio Dictionary new() puedes pasarlo con parámetros aqui
-        }
+		}
 	}
 }
 ```
