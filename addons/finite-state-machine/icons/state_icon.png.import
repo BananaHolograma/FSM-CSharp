@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dakj2baow0301"
-path="res://.godot/imported/icon.png-10021bd503b1e421b6daa27686deac40.ctex"
+uid="uid://4y7mwf6h8h3x"
+path="res://.godot/imported/state_icon.png-79278549e8fc6b19d9384cf6c7c33d74.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/finite-state-machine/icon.png"
-dest_files=["res://.godot/imported/icon.png-10021bd503b1e421b6daa27686deac40.ctex"]
+source_file="res://addons/finite-state-machine/icons/state_icon.png"
+dest_files=["res://.godot/imported/state_icon.png-79278549e8fc6b19d9384cf6c7c33d74.ctex"]
 
 [params]
 

@@ -20,7 +20,7 @@ config/description="A finite state machine designed to cover 95% of use cases, p
 
 There is nothing wrong using the same process on the CharacterBody2D to handle all the movement but when the things start to grow and the player can perform a wide number of moves it is better to start thinking about a modular way to build this movement. 
 In this case, a state machine is a design pattern widely employed in the video game industry to manage this complexity"
-config/features=PackedStringArray("4.2", "GL Compatibility")
+config/features=PackedStringArray("4.2", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [dotnet]

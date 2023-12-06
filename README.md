@@ -1,18 +1,18 @@
 <p align="center">
-	<img width="256px" src="https://github.com/GodotParadise/FSM-Csharp/blob/main/icon.jpg" alt="GodotParadiseFSM logo" />
+	<img width="256px" src="https://github.com/BananaHolograma/FSM-Csharp/blob/main/icon.jpg" alt="BananaHologramaFSM logo" />
 	<h1 align="center">Godot Paradise FSM</h1>
 	
-[![LastCommit](https://img.shields.io/github/last-commit/GodotParadise/FSM?cacheSeconds=600)](https://github.com/GodotParadise/FSM-Csharp/commits)
-[![Stars](https://img.shields.io/github/stars/godotparadise/FSM)](https://github.com/GodotParadise/FSM-Csharp/stargazers)
-[![Total downloads](https://img.shields.io/github/downloads/GodotParadise/FSM-Csharp/total.svg?label=Downloads&logo=github&cacheSeconds=600)](https://github.com/GodotParadise/FSM-Csharp/releases)
-[![License](https://img.shields.io/github/license/GodotParadise/FSM?cacheSeconds=2592000)](https://github.com/GodotParadise/FSM-Csharp/blob/main/LICENSE.md)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat&logo=github)](https://github.com/godotparadise/FSM-Csharp/pulls)
+[![LastCommit](https://img.shields.io/github/last-commit/BananaHolograma/FSM?cacheSeconds=600)](https://github.com/BananaHolograma/FSM-Csharp/commits)
+[![Stars](https://img.shields.io/github/stars/BananaHolograma/FSM)](https://github.com/BananaHolograma/FSM-Csharp/stargazers)
+[![Total downloads](https://img.shields.io/github/downloads/BananaHolograma/FSM-Csharp/total.svg?label=Downloads&logo=github&cacheSeconds=600)](https://github.com/BananaHolograma/FSM-Csharp/releases)
+[![License](https://img.shields.io/github/license/BananaHolograma/FSM?cacheSeconds=2592000)](https://github.com/bananaholograma/FSM-Csharp/blob/main/LICENSE.md)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat&logo=github)](https://github.com/bananaholograma/FSM-Csharp/pulls)
 [![](https://img.shields.io/discord/1167079890391138406.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/XqS7C34x)
 [![Kofi](https://badgen.net/badge/icon/kofi?icon=kofi&label)](https://ko-fi.com/bananaholograma)
 
 </p>
 
-[![es](https://img.shields.io/badge/lang-es-yellow.svg)](https://github.com/GodotParadise/FSM-Csharp/blob/main/locale/README.es-ES.md)
+[![es](https://img.shields.io/badge/lang-es-yellow.svg)](https://github.com/bananaholograma/FSM-Csharp/blob/main/locale/README.es-ES.md)
 - - -
 
 A finite state machine designed to cover 95% of use cases, providing essential functionality and a basic state node that can be extended now in C#.
@@ -25,7 +25,7 @@ A finite state machine designed to cover 95% of use cases, providing essential f
 	- [CSharp GlobalClasses](#csharp-globalclasses)
 - [Getting started](#getting-started)
 - [Guide](#guide)
-	- [GodotParadiseState](#godotparadisestate)
+	- [State](#state)
 		- [Enter()](#enter)
 		- [Exit()](#exit)
 		- [HandleInput(InputEvent @event)](#handleinputinputevent-event)
@@ -39,12 +39,12 @@ A finite state machine designed to cover 95% of use cases, providing essential f
 	- [Accessible parameters](#accessible-parameters)
 	- [How to change the state](#how-to-change-the-state)
 	- [Functions](#functions)
-		- [ChangeState(GodotParadiseState newState, Dictionary parameters, bool force = false)](#changestategodotparadisestate-newstate-dictionary-parameters-bool-force--false)
+		- [ChangeState(State newState, Dictionary parameters, bool force = false)](#changestatestate-newstate-dictionary-parameters-bool-force--false)
 		- [ChangeStateByName(string name, Dictionary parameters, bool force = false)](#changestatebynamestring-name-dictionary-parameters-bool-force--false)
-		- [EnterState(GodotParadiseState state)](#enterstategodotparadisestate-state)
-		- [ExitState(GodotParadiseState state)](#exitstategodotparadisestate-state)
+		- [EnterState(State state)](#enterstatestate-state)
+		- [ExitState(State state)](#exitstatestate-state)
 		- [GetStateByName(string name)](#getstatebynamestring-name)
-		- [bool CurrentStateIs(GodotParadiseState state)](#bool-currentstateisgodotparadisestate-state)
+		- [bool CurrentStateIs(State state)](#bool-currentstateisstate-state)
 		- [bool CurrentStateNameIs(string name)](#bool-currentstatenameisstring-name)
 		- [LockStateMachine()](#lockstatemachine)
 		- [UnlockStateMachine()](#unlockstatemachine)
@@ -64,18 +64,18 @@ You can download this plugin from the official [Godot asset library](https://god
 ##  Manual 
 To manually install the plugin, create an **"addons"** folder at the root of your Godot project and then download the contents from the **"addons"** folder of this repository.
 ## GDScript
-This plugin has also been written in C# and you can find it on [FSM](https://github.com/GodotParadise/FSM)
+This plugin has also been written in C# and you can find it on [FSM](https://github.com/bananaholograma/FSM)
 
 ## CSharp GlobalClasses
 In order to make available in the Godot editor the custom classes you've created, that unlike gdscript, in C# you need use Global classes.
 
-So for example if you create a `Idle` state that inherits from `GodotParadiseState` in this way, you cannot add this as child in the scene tree via editor until you use the decorator:
+So for example if you create a `Idle` state that inherits from `State` in this way, you cannot add this as child in the scene tree via editor until you use the decorator:
 ```csharp
 using Godot;
 using System;
 
 [GlobalClass, Icon("res://addons/finite_state_machine/state_icon.png")]
-public partial class Idle : GodotParadiseState
+public partial class Idle : State
 {
     public override void Enter()
     {
@@ -87,9 +87,9 @@ public partial class Idle : GodotParadiseState
 
 # Getting started
 The finite state machine can be added as any other node in the scene tree where you want to use it. 
-![fsm-add-node](https://github.com/GodotParadise/FSM-Csharp/blob/main/images/fsm_add_child.png)
-![fsm-added-scene-tree](https://github.com/GodotParadise/FSM-Csharp/blob/main/images/fsm_added_scene_tree.png)
-![fsm-example](https://github.com/GodotParadise/FSM-Csharp/blob/main/images/fsm_example.png)
+![fsm-add-node](https://github.com/bananaholograma/FSM-Csharp/blob/main/images/fsm_add_child.png)
+![fsm-added-scene-tree](https://github.com/bananaholograma/FSM-Csharp/blob/main/images/fsm_added_scene_tree.png)
+![fsm-example](https://github.com/bananaholograma/FSM-Csharp/blob/main/images/fsm_example.png)
 
 ⚠️ The finite state machine **always need at least one default state** to start with, this default state can be set on the exported variable `CurrentState`. Once this is done, when executing the scene this will be the current state of the machine until the conditions that change the state occur. 
 While nothing will break without it, having a defined initial state is good practice to start from.
@@ -99,7 +99,7 @@ There will always be only one `_PhysicProcess()` or `_Process_()` since it is th
 `Enter()` and `Exit()` are called when the new state becomes the current and when it will transition to another state. They are useful to clean up or get ready some sort of parameters inside the state to be used only in this state.
  
 # Guide
-## GodotParadiseState
+## State
 All the functions here are virtual, which means they can be overridden with the desired functionality in each case.
 
 In all states you have access to the `PreviousStates` and the extra `Parameters` you have exchanged between transition and transition.
@@ -109,7 +109,7 @@ The `PreviousStates` are available only if you enabled the stack in the FSM.
 using Godot;
 using Godot.Collections;
 
-public partial class GodotParadiseState : Node
+public partial class State : Node
 {
 	[Signal]
 	public delegate void StateEnteredEventHandler();
@@ -118,7 +118,7 @@ public partial class GodotParadiseState : Node
 	[Signal]
 	public delegate void StateFinishedEventHandler(string nextState, Dictionary parameters);
 
-	public Array<GodotParadiseState> PreviousStates = new();
+	public Array<State> PreviousStates = new();
 	public Dictionary parameters = new();
 
 
@@ -178,7 +178,7 @@ You can use this function generically to execute custom logic when an AnimatedSp
 
 ## Signals
 - *StateEntered*
-- *StateFinished(GodotParadiseState next_state, Dictionary parameters)*
+- *StateFinished(State next_state, Dictionary parameters)*
 
 So for example if you want to implement a **Idle** state it's easy as:
 ```csharp
@@ -186,7 +186,7 @@ using Godot;
 using System;
 
 [GlobalClass, Icon("res://addons/finite_state_machine/state_icon.png")]
-public partial class Idle : GodotParadiseState {
+public partial class Idle : State {
 	public override void Enter() {
 		// play animations...
 		// set velocity to zero...
@@ -203,13 +203,13 @@ public partial class Idle : GodotParadiseState {
 
 # The Finite State Machine *(FSM)*
 ## Exported parameters
-- CurrentState: GodotParadiseState = null
+- CurrentState: State = null
 - StackCapacity: int = 3
 - FlushStackWhenReachCapacity: bool = false
 - EnableStack: bool = true
 ## Accessible parameters
 - States: Dictionary
-- StatesStack: Array[GodotParadiseState]
+- StatesStack: Array[State]
 - Locked: bool
 
 When this node is ready in the scene tree, all the states detected as children **at any nesting level** are saved in a dictionary for easy access by their node names. 
@@ -225,7 +225,7 @@ using Godot;
 using System;
 
 [GlobalClass, Icon("res://addons/finite_state_machine/state_icon.png")]
-public partial class Idle : GodotParadiseState {
+public partial class Idle : State {
 
 	public override void PhysicsUpdate(double delta) {
 		Vector2 InputDirection = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
@@ -237,12 +237,12 @@ public partial class Idle : GodotParadiseState {
 }
 ```
 As you can see, within each individual state, you have the option to emit the `StateFinished` signal, which will be monitored by the parent state machine.
-You can find a more complex example in the repository [FirstPersonController](https://github.com/GodotParadise/First-Person-Controller/tree/main/first_person_controller/state_machine)
+You can find a more complex example in the repository [FirstPersonController](https://github.com//First-Person-Controller/tree/main/first_person_controller/state_machine)
 
 ## Functions
 Usually **you don't really want to call this functions manually**, it is preferable to emit signals from the states themselves and let the finite state machine react to these signals in order to execute actions such as changing the state. By the way, nothing stops you yo do that and may be needed in your use case.
 
-### ChangeState(GodotParadiseState newState, Dictionary parameters, bool force = false)
+### ChangeState(State newState, Dictionary parameters, bool force = false)
 Changes the current state to the next state passed as parameter if they are not the same. This action can be forced with the third parameter force.
 If the state can be transitioned, the `Exit()` function from the current state and the `Enter()` function of the next state will be executed.
 In this transition the new state can receive external parameters. Emits the signal `StateChanged`
@@ -250,15 +250,15 @@ In this transition the new state can receive external parameters. Emits the sign
 ### ChangeStateByName(string name, Dictionary parameters, bool force = false)
 Perform the same action as the `ChangeState` function but by receiving the state with the name it has in the states dictionary. For example, if we have a node state named **'Idle'** in the scene, it can be changed using `ChangeStateByName("Idle")`
 
-### EnterState(GodotParadiseState state)
+### EnterState(State state)
 This function is called when a new state becomes the current state. During this process, the `state_entered` signal is emitted.
 
-### ExitState(GodotParadiseState state)
+### ExitState(State state)
 Exit the state passed as parameter, execute the `_exit()` function on this state.
 ### GetStateByName(string name)
 Returns the state node using the dictionary key from the states variable if it exists, or null if it does not.
 
-### bool CurrentStateIs(GodotParadiseState state)
+### bool CurrentStateIs(State state)
 Check if the current state is the one passed as parameter
 
 ### bool CurrentStateNameIs(string name)
@@ -271,25 +271,25 @@ Lock the state machine, all the process are set to false and the stack is disabl
 Unlock the machine, all the process are set to true and stack is enabled again (if it was enabled). This function is called automatically when locked changes to true
 
 ## Signals
-- *StateChanged(GodotParadiseState fromState, GodotParadiseState state)*
-- *StackPushed(GodotParadiseState newState, Array<GodotParadiseState> stack)*
-- *StackFlushed(Array<GodotParadiseState> stack)*
+- *StateChanged(State fromState, State state)*
+- *StackPushed(State newState, Array<State> stack)*
+- *StackFlushed(Array<State> stack)*
 
 
 # ✌️You are welcome to
-- [Give feedback](https://github.com/GodotParadise/FSM-Csharp/pulls)
-- [Suggest improvements](https://github.com/GodotParadise/FSM-Csharp/issues/new?assignees=BananaHolograma&labels=enhancement&template=feature_request.md&title=)
-- [Bug report](https://github.com/GodotParadise/FSM-Csharp/issues/new?assignees=BananaHolograma&labels=bug%2C+task&template=bug_report.md&title=)
+- [Give feedback](https://github.com/bananaholograma/FSM-Csharp/pulls)
+- [Suggest improvements](https://github.com/bananaholograma/FSM-Csharp/issues/new?assignees=BananaHolograma&labels=enhancement&template=feature_request.md&title=)
+- [Bug report](https://github.com/bananaholograma/FSM-Csharp/issues/new?assignees=BananaHolograma&labels=bug%2C+task&template=bug_report.md&title=)
 
-GodotParadise is available for free.
+ is available for free.
 
-If you're grateful for what we're doing, please consider a donation. Developing GodotParadise requires massive amount of time and knowledge, especially when it comes to Godot. Even $1 is highly appreciated and shows that you care. Thank you!
+If you're grateful for what we're doing, please consider a donation. Developing  requires massive amount of time and knowledge, especially when it comes to Godot. Even $1 is highly appreciated and shows that you care. Thank you!
 
 - - -
 # 🤝Contribution guidelines
 **Thank you for your interest in Godot Paradise!**
 
-To ensure a smooth and collaborative contribution process, please review our [contribution guidelines](https://github.com/GodotParadise/FSM-Csharp/blob/main/CONTRIBUTING.md) before getting started. These guidelines outline the standards and expectations we uphold in this project.
+To ensure a smooth and collaborative contribution process, please review our [contribution guidelines](https://github.com/bananaholograma/FSM-Csharp/blob/main/CONTRIBUTING.md) before getting started. These guidelines outline the standards and expectations we uphold in this project.
 
 **📓Code of Conduct:** We strictly adhere to the [Godot code of conduct](https://godotengine.org/code-of-conduct/) in this project. As a contributor, it is important to respect and follow this code to maintain a positive and inclusive community.
 
